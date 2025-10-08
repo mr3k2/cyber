@@ -1,0 +1,156 @@
+📦 Example: IPv4 Packet Format (from RFC 791)
+
+The RFC defines the IPv4 packet header, which looks like this:
+
+0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|Version|  IHL  |Type of Service|          Total Length         |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|         Identification        |Flags|      Fragment Offset    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  Time to Live |    Protocol   |         Header Checksum        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                       Source Address                          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Destination Address                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Options                    |    Padding    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+🔑 Breaking this down in simple words
+
+Version (4 bits) → says this is IPv4 (value = 4).
+
+IHL (4 bits) → header length.
+
+Type of Service (8 bits) → QoS, priority of packet.
+
+Total Length (16 bits) → size of the packet (max 65,535 bytes).
+
+Identification, Flags, Fragment Offset → used if packet is split into fragments.
+
+TTL (8 bits) → Time to Live (prevents packets from looping forever).
+
+Protocol (8 bits) → says which protocol is inside (e.g., TCP=6, UDP=17, ICMP=1).
+
+Checksum (16 bits) → ensures header isn’t corrupted.
+
+Source & Destination Address (32 bits each) → sender and receiver IP addresses.
+
+Options + Padding → rarely used, for extra features.
+
+<----------------------------------------------------------------------->
+📦 IPv4 Header (from Wireshark capture):
+
+Internet Protocol Version 4, Src: 192.168.1.5, Dst: 142.250.183.174
+    0100 .... = Version: 4
+    .... 0101 = Header Length: 20 bytes
+    Differentiated Services Field: 0x00
+    Total Length: 84
+    Identification: 0x3c1f
+    Flags: 0x4000, Don't fragment
+    Fragment offset: 0
+    Time to live: 64
+    Protocol: ICMP (1)
+    Header checksum: 0x9d3a
+    Source: 192.168.1.5
+    Destination: 142.250.183.174 (google.com)
+
+🔑 Breaking it down with RFC rules
+
+Version: 4 → This packet follows RFC 791 IPv4.
+
+Header Length: 20 bytes → Standard IPv4 header.
+
+Total Length: 84 → Packet is 84 bytes long.
+
+TTL: 64 → Means the packet can make 64 hops (routers) before being dropped.
+
+Each router decreases TTL by 1.
+
+If TTL hits 0, the packet is destroyed, and sender gets an error.
+
+Prevents infinite loops.
+
+Protocol: ICMP (1) → Tells us this is an ICMP packet, not TCP or UDP.
+
+Source IP: 192.168.1.5 → My machine (private IP).
+
+Destination IP: 142.250.183.174 → Google server.
+
+⚡ Cybersecurity view
+
+If attacker sends packets with TTL = 1, they can “trace route” your path (that’s literally how traceroute works).
+
+If packets don’t follow RFC (e.g., TTL = 255 everywhere), defenders might flag it as suspicious.
+
+Attack tools often generate weird RFC-violating packets to confuse firewalls.
+
+------------------------------------------------------------------
+🌍 Real Example: TCP Packet inside IPv4
+
+When you open a website (say https://google.com), your browser talks to Google’s server using TCP (Protocol = 6).
+
+Here’s a Wireshark capture snippet:
+
+Internet Protocol Version 4, Src: 192.168.1.5, Dst: 142.250.183.174
+    0100 .... = Version: 4
+    .... 0101 = Header Length: 20 bytes
+    Differentiated Services Field: 0x00
+    Total Length: 60
+    Identification: 0x5a27
+    Flags: 0x4000, Don't fragment
+    Fragment offset: 0
+    Time to live: 64
+    Protocol: TCP (6)
+    Header checksum: 0x8d2b
+    Source: 192.168.1.5
+    Destination: 142.250.183.174 (google.com)
+
+Transmission Control Protocol, Src Port: 49512, Dst Port: 443, Seq: 0, Len: 0
+    Source Port: 49512
+    Destination Port: 443 (HTTPS)
+    [Stream index: 1]
+    Sequence number: 0
+    Acknowledgment number: 0
+    Header Length: 40 bytes
+    Flags: 0x002 (SYN)
+
+🔑 Breaking it down with RFC 791 & TCP rules
+
+IPv4 header
+
+Version = 4 → IPv4.
+
+Protocol = 6 → Inside this packet, it’s carrying a TCP segment.
+
+Source IP = 192.168.1.5 → My computer (private IP).
+
+Destination IP = 142.250.183.174 → Google server.
+
+TCP header (RFC 793)
+
+Source Port = 49512 → Random port chosen by my machine.
+
+Destination Port = 443 → HTTPS (secure web).
+
+Flags = SYN → This is the first handshake packet asking to start a TCP connection.
+
+After this, Google replies with SYN-ACK, then my system sends ACK → that’s the 3-way handshake.
+
+⚡ Cybersecurity view
+
+Attackers often exploit TCP handshake with SYN Flood attacks → they send tons of SYN packets but never complete the handshake.
+
+Defenders use RFC 793 rules to detect incomplete/abnormal handshakes.
+
+Firewalls look at port numbers and flags to block suspicious packets.
+
+✅ Key takeaway
+
+IPv4 (RFC 791) just carries the TCP segment inside it.
+
+TCP (RFC 793) defines how reliable connections (like HTTPS) are established.
+
+Together, they make the web run reliably and securely.

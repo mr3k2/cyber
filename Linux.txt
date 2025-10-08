@@ -1,0 +1,284 @@
+Basic Linux commands: 
+1. whoami -> Command for print username.
+2. uname -> print the guest OS name like: linux, windows, mac etc....
+3. passwd -> change the password of current user..
+4. ls -> list all current directories/ files.
+5. cd -> change directory,
+	-> for going back to directory use 'cd ..'
+6. clear -> clear the console screen..
+7. exit -> close the console window.
+8. date -> get the date,month and time as well.
+9. history -> history of all commands.
+10. sudo su -> go to root directory.
+11. apt-get -f upgrade -> full upgrade
+12. pwd -> print working directory (where you are).
+13. ls || -a & -l -> 
+			- ls -> list all directories & files.
+			- ls -a -> list all directories, file and hidden file also
+			- ls -l -> full information about any directories(like: file's permission etc..).
+			- ls -al -> full information (hidden file information also).
+14. dir -> same as ls with some differences.
+15. tree -> list all directories in tree format.
+16. mkdir -> create the new directory ex: mkdir new_folder.
+	- mkdir folder1 folder2 folder3 -> can create multiple folder at a tym, this will create 3 folders folder1 folder2 folder3
+17. rmdir -> remove the directory.
+	-remove multiple folder like create with rmdir directory.
+18. mv -> rename the directory, file. ex: mv oldDirName newDirName
+19. touch -> create the file.
+20. rm -> remove/delete the file
+21. cal -> get the calendar
+22. cp -> copy the file/directory
+23. echo -> print the text, like PHP. ex: echo 'hello world'
+	- echo hello>kali.txt -> to create kali file and store hello in the file
+24. cat -> print the file content. Read the file.
+25. mmv -> mass move, to move the file or directory
+26. vi -> text editor/ visual editor.
+27. nano -> text editor
+28. free -> check memory.
+29. df -> disk free, check disks/ file system
+30. ps -> check active process
+31. ps aux -> get all system running process.
+32. more -> read big files compare to cat.
+33. less -> similar to more but faster, can read pdf also and more type of files.
+34. man -> display manual page for another command, help to know/learn about other command, advance than help. ex: man less. etc
+35. uptime -> to get time, up, no of users, load average
+36. id -> get user identity.
+37. lsusb -> usb busses connected devices, like mouse, keyboard and other internal devices...
+38. lspci -> list PCI Buses.
+39. ulimit -> get how much resource amount user can consume.
+40. wc -> count the file words, characters. wc file.txt
+						-output:- no of line, no of words, no of characters.
+41. lsblk -> list all block devices, with memory information.
+42. tac -> print reverse data (reverse by line).
+42. od -> print the hexa decimal, octal format and american standard format also:-
+							- od -b fileName.txt -> print octal format
+							- od -tx1 fileName.txt -> print hexa decimal
+							- od -c fileName.txt -> print american standard format
+43. sleep -> hold/sleep the terminal ex: sleep 12. this will hold for 12 seconds.
+	* 44. ufw -> manage firewall rule. "Explore in details". *
+45. head -> print top 10 lines.
+46. tail -> print bottom/last 10 lines, not fixed it can take 8, 9, 7, 10 lines.
+47. sort -> sort the file content.
+48. lsof -> list open files in the system.
+49. lspci -> list PCI buses, usb devices etc.
+50. grep -> used to find & filter the data.
+				- cat file.txt | grep 'usb' -> this will filter the data and list "VPN" in this file.
+51. ifconfig -> list the networks, ip addresses, mac address, broadcast and netmask also. (this command configure the networks)
+52. ip a -> same as ifconfig, but better results with word highlighting.
+53. ip addr -> same as 'ip a'
+54. netstat -> list all networks connections. and other functionality also with different flags.
+55. ssh -> This is a secure shell to remote login, ex: ssh username@ipaddress -> faizz@127.44.33.11  
+56. iwconfig -> configure wireless interface.
+57. nslookup -> for information gathering, ex:  nslookup google.com
+58. arp -> arp(Address Resolution Protocol) used to find mac and ip address.
+59. route -> same as 'netstar -r'
+60. tcpdump -> advance command like 'wireshark' tool. used for filtering, capture packet, filter packet etc..
+61. ping -> trace the target active or not. check server responding or not.
+62. tracepath -> trace the target path, 
+63. exit -> to exit from super user/any user.
+64. su -> to change the user. ex: su username.
+65. hostname -> print the hostname.
+66. who -> who else logged in your system.
+67. command_name -h/--help -> get the help about any command.
+68. apropos -> this command used to find the related command like :- $apropos usb -> this will list all command related to the usb.
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+							***NetworkChuck***
+						(Let's the check out Hack the Box)
+Linux is a Kernal. This is a middle man of OS and cpu like:- run nmap -> your Parrot OS tell to the Linux Kernal please do that.
+There is many Linux os based on Linux Kernal like: kali Linux, parrot os etc.
+Why linux is unique: 
+					i)	Open source -> anyone can create own os using Linux kernal.
+					ii)	Faster -> Light-weight & Faster.
+					iii)	More secure -> why mostly hacking tools based on linux.
+-> Command Line Interface is more Faster than Graphical User Interface.
+-> Everything in Linux is a File like:- Network Settings, Devices(Hard Drive, CD etc). commands also a file in linux. 'ls' is also a file '/bin' directory but in binary format. All file in binary format inside the bin directory.
+-> We can rename any command and make another copy of a command with the different name.
+
+
+			-------------File System---------
+-> bin :- bin is a directory in root, we have essential commands files in bin directory. Every file in bin directory is in binary format.
+-> sbin :- sbin(super bin) has some special command/super essential command. only admin can access them.
+-> usr :- usr also has bin and sbin directory.
+
+$which command_name :- to check which command we are using like: /bin/command or /usr/bin/command.
+
+-> local:-	that's where software we install manually. Also stores file in binary format.
+-> lib	:-	shared library files.
+-> boot :-	has boot files.
+-> var	:-	log files.
+-> temp	:-	has temporary files.
+
+-> home :-	stored users/ users live in home directory.
+-> root :-	root lives in root directory. special user lives in special directory.
+-> dev	:-	devices lives in dev like: hard drive, cd and pen drive etc.
+-> etc 	:-	has configuration files. 
+-> mnt & media :- /media itself is usually empty. When you plug in a USB, Linux auto-creates a subfolder inside `/media`.
+				### 🔹 Example
+					1. Plug in a USB stick named **LINUXUSB** inside parrot(your username).
+					2. Linux will mount it automatically at:
+						/media/parrot/LINUXUSB
+					3. You can `cd` into it: cd /media/parrot/LINUXUSB
+						✅ In short: `/media` is Linux’s “door” for external drives, CDs, and USBs.
+					
+	-------User Management-------- 
+$#adduser username :- to add the user but only root user has this permission dude.
+	Difference between adduser & useradd:
+			useradd :- is lazy, need to create home directory and password manually. and default got sh shell need to change into bash for extra features.
+			adduser :- advance and good for use, make automatically home and .bash account.
+$cat /etc/passwd :- to list/print all users.
+$cat /etc/shadow :- to list/print all user's password, stored in hash version.
+$#passwd username:- to change/set the user password.
+
+$#usermod username --shell /bin/bash :- to change the user shell sh to bash.
+$#useradd username -m :- to add home directory during user creation with the help of useradd command.
+$#su - -> to become the root user itself.
+$#visudo -> to add user/group in sudoers.
+$#userdel -> to delete the user.
+$#groupadd groupname -> create group
+$cat /etc/group -> list/print all groups. if add a group in sudoers then every member of that group has privilege power/access.
+$#usermod -aG group_name username -> append user into the group.
+$#gpasswd -d username group_name -> to remove user from a group.
+$#groupdel group_name -> delete the user.
+
+		-----------Package Manager------------
+1) dpkg (Low Level):- $#dpkg -i/--install file.deb -> Need to download .deb file from google. (DPKG) is dumb because we need to downoad dependent packages manually.
+2) apt (High Level):- $#apt install package_name -> No need to download .deb file but package/application name. It installed dependent packages automatically.
+	-> $#apt --fix-broken install -> to install broken install packages.
+	-> $#apt edit-sources -> give us path to get the apt packages list repository.
+	-> $#apt list --installed -> list all install repositories.
+	
+	-> $#apt remove application_name -> remove the application/repository but don't user data.
+	-> $#apt purge application_name -> remove the application/repository with user data.
+	-> $#apt purge application_name-data -> remove the secondory repository also.
+	
+	-> $#apt update -> update the package managet.
+	-> $#apt upgrade -> updrade the installed software.
+	-> $#apt update && #apt upgrade -> update and upgrade in one line.
+	-> $#apt full-upgrade -> full updrade/upgrade everything.
+	
+3) aptitude (High Level)
+4) snap (snapd) :- This is better option and developer can upload their own app.
+	-> $#snap install --classic code -> to install vs code using snap.
+-> And every language has their own package manager, like pip (python), git etc...
+
+		-----Daemon Hunting------
+Process:- Instance of a running program.
+	$ps -aux -> to show all process, need to filter -> $ps -aux | grep sublime/nano etc. according to the process.
+-> Daemon -> Background process (we don't start them). A.K.A "services".
+-> find the daemons in the system like: SSH to SSHD, SSHD is a daemon ('d' belongs to daemon).
+	$ps -aux | grep ssh -> got any sshd process called daemon.
+	$ps -aux | grep ntp -> got any ntpd process called daemon (d belongs to daemon).
+	
+
+$pstree -> to get all systemd tree.
+-> systemctl -> to control all our daemons.(All daemons in systemd in the form of units).
+	$#systemctl stop/start/status/restart/reload-or-restart/enable/disable  sshd/ntp -> to stop the service (danget don't try this).
+Perfect dude 🤝🔥 here’s a **visual ASCII mind map** for you:
+```
+                           ┌─────────────────┐
+                           │     systemd     │   ← The "boss" (PID 1)
+                           └────────┬────────┘
+                                    │
+                ┌───────────────────┴───────────────────┐
+                │                                       │
+         ┌──────▼──────┐                        ┌───────▼───────┐
+         │   Units     │                        │   Processes   │
+         │ (configs)   │                        │ (running apps)│
+         └──────┬──────┘                        └───────┬───────┘
+                │                                       │
+   ┌────────────┼──────────────┐                        │
+   │            │              │                        │
+┌──▼─────┐   ┌───▼────┐   ┌────▼────┐              ┌────▼────────┐
+│Service │   │ Socket │   │ Target  │              │ firefox PID │
+│.service│   │.socket │   │.target  │              │ nginx   PID │
+└───┬────┘   └───┬────┘   └────┬────┘              │ sshd   PID  │
+    │            │             │                   └─────────────┘
+    │            │             │
+    ▼            ▼             ▼
+ nginx.service   ssh.socket   multi-user.target
+ ssh.service     cups.socket  graphical.target
+---
+### 🔹 How it flows:
+	* **systemd** = controls everything
+	* **Units** = configs describing what to run/manage
+	* **systemctl** = the tool to control units (start/stop/etc.)
+	* **Units → Processes** = when a unit is active, it runs a process
+Example: sudo systemctl start nginx.service
+	* systemctl tells **systemd** →
+	* systemd reads **nginx.service unit file** →
+	* Starts the **nginx process** (with a PID).
+---
+
+$#systmctl list-units -> list all active units.
+$#systmctl list-units -t service -> list all active services
+
+
+$ps -u username | grep process_name -> to get the process like firefox etc.
+$pgrep process_name -> this is a combination of ps and grep command but returns process id only.
+
+$kill process_id  -> to kill the running process.
+$top -> same as ps -aux but good.(sorting process according to  memory/cpu uses).
+$htop -> same as top with good interface.
+-> Types of process:
+				i) Foreground Process.
+				ii) Background Process.
+$ctrl + c -> closed kill the process 
+$ctrl + z -> stopped/sleep the process but running in the background.
+$jobs -> to list all stopped/sleep process (foreground process).
+-> All kills type :- $kill -l
+-> To kill forcefully :- $kill -2 process_id -> like ctrl + c.
+			$kill -9 process_id -> killed directly.
+$pkill -9 process_name -> killed all process, run in another terminal tab.
+
+		---------Conversation with website using command line interface---------
+$python -m http.server (optional: manual port number) -> to create a website (i'll create a web site where you can access your whole system/files), it runs your current directory as a browser.
+$php -S 127.0.0.1:port -> create web using php..
+	and we can use many packages like npx(javascript) etc. 
+$systemctl start apache2 -> start apache server.
+	$nano /etc/apache2/ports.conf -> ports configuration. ex change the port.
+$curl url:port -> curl stand for client url. Used to get source code of any website in command line Interface.
+$curl -o directory_name url:link -> Store Web-Page/source code in current directory.
+$curl -I localhost:port -> get in details (get a response header).
+$curl -v localhost:port -> verbose, get everything like source code html, css. get request/response header also.
+$wget localhost:port -> it downloads the html page.
+
+
+---------------Short-Cuts(To become the NINJA)-------------------
+
+-> ctrl + l -> to clear the terminal.
+$cd - -> go back to the previous directory.
+$cd -> back to the home directory.
+$cd / -> go to the root directory.
+$ll -> similar to cd -l
+$la -> similar to cd -al
+
+------> to create new command: $alias new_command_name='command', ex: $alias dude='ls -al'
+		- but at this time dude command is not permanent, it'll disaper during boot.
+		-> to make it permanent, add command in this file : $nana .bashrc 
+-> ctrl + a -> goto the begning of the line and ctrl + e goto the end of the line.
+-> ctrl + u -> to remove the current command/ clear the current command before the cursor.
+-> ctrl + y -> to back the remove/clear command. (like undo), but paste before the cursor.
+-> ctrl + k -> to remove after the cursor.
+-> alt + backspc -> to remove the last word of the command.
+-> ctrl + x + e -> to open command in nano text editor and executes during come back to terminal.(Useful for long commands).
+$sudo !! -> give permission to the last command which one need sudo but you forgot, so now we can use sudo !! to complete that previous command.
+$sudo tail -f /var/log/auth.log -> to see real time logs, -f flag helps to make it live terminal.
+-> ctrl + r -> to search the word in command history.
+$cat > file.txt -> and hit enter then type something to store in this file.
+$cat << EOF > file.txt -> write multiple lines until you type EOF to end the lines.
+$echo "write anything to store in the file etc" > file.txt -> to store the data into the file using this..
+$mv file1 file2 file3 ./destination_directory -> we can move multiple file a time. and can rename the file during the moving.
+	-> cp same as mv but this is for copy the file not move.
+$mkdir -p directory/child1/child_of_chile1/then_its_child -> this will create family tree like: child of child etc: ex: this will help to create tree directory.
+
+--> we can use bash script to make million directory: ex-:
+								#!/bin/bash
+								for i in {1..1000000}
+								do 
+									mkdir -p ./$i/another/anotherone/another
+								done
+			and then can run this script .sh file.

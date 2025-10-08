@@ -1,0 +1,493 @@
+- What is Networking?
+	Connected of Computers(Collection of Computer Networks).
+
+- What was the first NET (Internet/Network)?
+	APARA NET, Developed by US for their-self (To connect some buildings).
+
+#Protocol: Protocol means Process (Like TCP/IP)
+
+- What is WWW?
+	WWW stands for world wide web (World first website info.corn.xxxxxxx...) and does't has Search Engine.
+
+- What is  Protocol?
+	Protocol means some 'Rules & Regulations'
+
+- Internet Society?
+	The Internet Society (ISOC) is a global non-profit organization dedicated to promoting the open development, evolution, and use of the internet for the benefit of people worldwide.
+
+- RFC (Request for Comments)?
+	RFC stands for Request for Comments, They describe standards, protocols, procedures, and best practices that make the internet work.
+	Think of RFCs as the 'Rulebooks + Blueprints of the Internet'.
+	🧩 Examples:
+		RFC 791 → Defines IPv4 (Internet Protocol version 4).
+		RFC 2460 → Defines IPv6.
+		RFC 2616 → Defines HTTP/1.1 (how web browsers and servers talk).
+		RFC 1034/1035 → Defines DNS (how names like google.com resolve to IPs).
+
+	So whenever you hear “This protocol follows RFC…”, it means it follows the standard officially documented there.
+
+
+🧩 TCP vs TCP/IP Model
+
+These two sound similar, but they’re different things:
+
+1️⃣ TCP (Transmission Control Protocol)
+A protocol used for reliable data transfer.
+Works on top of IP (Internet Protocol).
+
+Features:
+Connection-oriented (3-way handshake).
+Reliable (ACKs, retransmission).
+Ensures order of packets.
+
+Example: When you open a website (HTTPS), your browser talks via TCP port 443.
+👉 TCP is just one protocol, like a single tool.
+
+
+2️⃣ TCP/IP Model (a.k.a Internet Model)
+A framework / architecture describing how all internet communication works.
+
+Has 4 layers (sometimes explained as 5):
+
+| TCP/IP Layer         | Example Protocols           |
+| -------------------- | --------------------------- |
+| Application Layer    | HTTP, HTTPS, DNS, FTP, SMTP |
+| Transport Layer      | TCP, UDP                    |
+| Internet Layer       | IP, ICMP                    |
+| Network Access Layer | Ethernet, Wi-Fi             |
+
+👉 TCP/IP model is like the blueprint, while TCP is one brick in the blueprint.
+⚡ Think of it like this:
+TCP/IP Model = the entire road system.
+TCP = just one car driving on that road.
+
+🔗 Where HTTP fits
+
+HTTP/HTTPS = Application layer protocols.
+They use TCP (transport layer) to send/receive data reliably.
+And TCP runs on top of IP (internet layer).
+
+So the chain looks like this when you load a website:
+HTTP → TCP → IP → Ethernet/Wi-Fi → Internet
+
+✅ Summary:
+    TCP = a specific protocol for reliable communication.
+    TCP/IP Model = the whole reference model of internet communication.
+    HTTP = sits at the application layer, using TCP underneath.
+
+*PACKET*
+A packet is the smallest unit of data sent over a network.
+It has two main parts:
+Header → metadata (source/destination IP, protocol, etc.).
+Payload → the actual data (like part of an email, web page, or video).
+
+Packets travel hop by hop (router to router) until they reach the destination, where they get reassembled into the original message.
+
+👉 Think of a packet like a postal envelope:
+Address on the outside = Header.
+Letter inside = Payload.
+
+
+🌍 Example: TCP SYN packet (IPv4 + TCP)
+
+When you open a website (https://example.com), your machine sends a TCP SYN packet to start the connection.
+📦 IPv4 Header (RFC 791):
+Version: 4
+Header Length: 20 bytes
+Total Length: 60
+Identification: 0x1c46
+Flags: Don't Fragment
+Fragment Offset: 0
+Time to Live (TTL): 64
+Protocol: 6 (TCP)
+Header Checksum: 0x0000
+Source IP: 192.168.1.10
+Destination IP: 93.184.216.34 (example.com)
+
+
+📦 TCP Header (RFC 793):
+Source Port: 49512
+Destination Port: 443 (HTTPS)
+Sequence Number: 0
+Acknowledgment Number: 0
+Header Length: 40 bytes
+Flags: SYN
+Window Size: 64240
+Checksum: 0x1234
+Urgent Pointer: 0
+
+
+
+Q: is this two packet or one, means is this send separate packets for ipv4 and tcp or wrapped in one packet?
+
+-Aha 🔥 good question dude — this is **one single packet**, not two.
+Here’s how it works:
+
+* **IPv4 = Outer envelope** 📬
+* **TCP = Letter inside the envelope** 📝
+
+So when your computer sends data:
+
+1. It **builds a TCP segment** (with ports, flags, sequence numbers).
+2. That TCP segment is then **wrapped inside an IPv4 packet**.
+3. Finally, the whole thing is wrapped again inside a **Data Link layer frame** (Ethernet/Wi-Fi) before hitting the wire/air.
+
+---
+
+### Visual (one packet wrapped inside layers)
+
+```
+[ Ethernet Header ] 
+   └─ [ IPv4 Header ]
+         └─ [ TCP Header ]
+               └─ [ Payload (App data like HTTP) ]
+```
+
+👉 So it’s **not two packets** → it’s **one packet with layers** (like an onion 🧅).
+When it travels, routers only look at the **IPv4 header**, while the destination host will go deeper and process the **TCP header + payload**.
+---
+bro 😎 let’s draw the **encapsulation process** (how one packet carries multiple layers).
+---
+
+## 📦 Encapsulation (One Packet, Many Layers)
+
+When you send **HTTP data** (say you type `https://example.com`), the packet looks like this:
+
+```
++---------------------------------------------------------+
+| Ethernet Header (MAC src/dst, etc.)                     |  <-- Layer 2 (Link layer)
++---------------------------------------------------------+
+| IPv4 Header (src IP, dst IP, TTL, Protocol=6)           |  <-- Layer 3 (Network layer)
++---------------------------------------------------------+
+| TCP Header (src port, dst port, flags=SYN, seq=0)       |  <-- Layer 4 (Transport layer)
++---------------------------------------------------------+
+| HTTP Request Data (GET /index.html)                     |  <-- Layer 7 (Application layer)
++---------------------------------------------------------+
+```
+---
+### 🔑 Key idea:
+* **ONE single packet** contains **all these headers + payload**, like layers of an onion 🧅.
+* Each layer **wraps** the data from the layer above it.
+* At the receiving end, the layers are **unwrapped in reverse** (decapsulation).
+---
+
+### 🚚 Analogy
+
+Imagine sending a gift 🎁:
+
+1. **HTTP Data** = the actual gift (your message).
+2. **TCP Box** = package that ensures delivery safely (reliable transport).
+3. **IP Label** = shipping address (source/destination IPs).
+4. **Ethernet Envelope** = courier wrapper (local delivery over LAN/Wi-Fi).
+At the destination → unwrap step by step until the receiver gets the gift.
+
+---
+Alright dude 🤝 let’s get back into **IP addresses** — the backbone of networking 🌐
+---
+
+## 🧩 What is an IP Address?
+* An **IP address** is a unique number given to each device in a network.
+* It’s like the **house address** of your device on the internet.
+
+* Two versions exist:
+	  * **IPv4** → 32-bit (e.g., `192.168.1.10`)
+	  * **IPv6** → 128-bit (e.g., `2001:db8::1`)
+---
+
+## 📦 IPv4 Address Structure
+IPv4 = **32 bits** → written as **4 octets** in decimal.
+Example:
+	```
+	192.168.1.10
+	```
+In binary:
+	```
+	11000000.10101000.00000001.00001010
+	```
+---
+
+## 📌 Classes (Classful system – old, but good to know)
+
+* **Class A**: 1.0.0.0 – 126.255.255.255 → Large networks
+* **Class B**: 128.0.0.0 – 191.255.255.255 → Medium networks
+* **Class C**: 192.0.0.0 – 223.255.255.255 → Small networks
+* **127.x.x.x** → Loopback (localhost, testing)
+
+* **Private ranges**:
+	  * Class A: `10.0.0.0/8`
+	  * Class B: `172.16.0.0/12`
+	  * Class C: `192.168.0.0/16`
+---
+
+## 🔑 Two Parts in IP
+
+1. **Network ID** → Identifies the network.
+2. **Host ID** → Identifies the specific device in that network.
+
+👉 Subnet mask helps separate these parts.
+---
+
+### Example
+
+IP = `192.168.1.10`
+Subnet Mask = `255.255.255.0`
+
+* **Network ID** = `192.168.1.0`
+* **Host ID** = `10`
+* Range of usable hosts = `.1` → `.254`
+
+---
+
+✅ In short:
+
+* IP address = **device’s address** on a network.
+* Subnet mask = **divider** between network part & host part.
+* Public IP = Internet-facing, Private IP = local only.
+
+---
+
+Perfect place to zoom in, dude 🚀
+
+An **IPv4 address** is basically **split into 2 parts**:
+
+---
+
+## 🧩 1. Network ID
+
+* Tells **which network** the device belongs to.
+* Think of it like the **colony name** in your city.
+* All devices inside that network will share the **same Network ID**.
+
+---
+
+## 🧩 2. Host ID
+
+* Tells **which device** inside that network.
+* Think of it like the **house number** inside the colony.
+* Each device must have a **unique Host ID** within the same network.
+
+---
+
+## 🔑 Role of Subnet Mask
+
+* The **subnet mask** is what divides the **network part** and the **host part**.
+* Example:
+
+👉 IP = `192.168.1.10`
+👉 Subnet Mask = `255.255.255.0`
+
+In binary:
+
+```
+IP Address:     11000000.10101000.00000001.00001010
+Subnet Mask:    11111111.11111111.11111111.00000000
+```
+
+* The **1s** in subnet mask = **network part**
+* The **0s** in subnet mask = **host part**
+
+So here:
+
+* **Network ID** = `192.168.1.0` (first 24 bits)
+* **Host ID** = `.10` (last 8 bits → 00001010)
+
+---
+
+### 🏠 Real-Life Analogy
+
+* **Network ID** = Your **street name** (common for everyone in that street).
+* **Host ID** = Your **house number** (unique inside that street).
+
+So, `192.168.1.10` is **House #10 on Street 192.168.1** 🏡
+
+---
+
+🎯 Final Answer
+
+IP: 192.168.1.10
+
+Subnet Mask: 255.255.255.0 (/24)
+
+Network ID: 192.168.1.0
+
+Broadcast: 192.168.1.255
+
+Usable Range: 192.168.1.1 – 192.168.1.254 (254 hosts)
+
+⚡ Quick example 2 (different subnet):
+IP = 10.0.1.1, Mask = 255.255.0.0 (/16)
+
+Network ID = 10.0.0.0
+
+Broadcast = 10.0.255.255
+
+Usable hosts = 65,534 (10.0.0.1 → 10.0.255.254)
+
+| CIDR (Slash) | Subnet Mask     | # of Host Bits | Usable Hosts                           | Example Network Range              |
+| ------------ | --------------- | -------------- | -------------------------------------- | ---------------------------------- |
+| **/8**       | 255.0.0.0       | 24             | 16,777,214 hosts                       | 10.0.0.1 → 10.255.255.254          |
+| **/16**      | 255.255.0.0     | 16             | 65,534 hosts                           | 172.16.0.1 → 172.16.255.254        |
+| **/24**      | 255.255.255.0   | 8              | 254 hosts                              | 192.168.1.1 → 192.168.1.254        |
+| **/30**      | 255.255.255.252 | 2              | 2 hosts (used in point-to-point links) | Example: 192.168.1.1 ↔ 192.168.1.2 |
+
+🚀 How to Read This
+/8 → First 8 bits are Network, rest are Hosts
+/16 → First 16 bits are Network
+/24 → First 24 bits are Network
+/30 → Almost all are Network, only 2 usable hosts
+👉 Formula Reminder:
+Usable Hosts = 2^(host bits) - 2
+
+🔥 Pro tip (Cybersecurity POV):
+/24 is most common in LANs (home/office Wi-Fi).
+/16 or /8 are used in large organizations, data centers, ISPs.
+/30 used in secure router-to-router links.
+
+
+
+Perfect timing dude ⚡ — let’s clear up the **Private IP + NAT + Internet flow** with a **diagram + explanation**.
+
+---
+
+# 🏠 How Private IPs Reach the Internet
+
+### 🔹 Example Setup
+
+* Your **laptop** → IP = `192.168.1.10` (private)
+* Your **phone** → IP = `192.168.1.11` (private)
+* Both connect to your **Wi-Fi router**
+* Router has a **public IP** from the ISP (e.g., `49.35.200.15`)
+
+---
+
+### 🔹 Diagram (Encapsulation + NAT)
+
+```
+[ Laptop ] 192.168.1.10
+     |
+[ Phone ] 192.168.1.11
+     |
+     |  (Private Network /24)
+     v
+ [ Wi-Fi Router ]
+   - Inside: Private 192.168.1.1
+   - Outside: Public 49.35.200.15 (ISP)
+     |
+     |  (Public Internet)
+     v
+ [ ISP Network ] ---> [ Internet Servers ]
+```
+
+---
+
+### 🔹 Step-by-step Process
+
+1. **Laptop sends a packet** → Destination = `142.250.183.110` (Google.com)
+
+   * Source IP = `192.168.1.10`
+   * Destination IP = `142.250.183.110`
+
+2. **Router receives packet**
+
+   * Router sees the private IP (192.168.x.x)
+   * Router can’t send this to internet (not routable).
+
+3. **NAT (Network Address Translation) kicks in**
+
+   * Router changes **Source IP** from `192.168.1.10` → `49.35.200.15` (its public IP).
+   * Router keeps a **NAT table** to remember who sent what.
+
+4. **Packet goes to Internet**
+
+   * Now packet looks like:
+
+     * Source = `49.35.200.15`
+     * Destination = `142.250.183.110`
+
+5. **Server replies** (Google.com → 49.35.200.15)
+
+   * Reply comes back to router.
+   * Router checks NAT table → “Oh this belongs to 192.168.1.10”.
+   * Router sends it back inside to your laptop.
+
+6. **Your laptop gets the reply** 🎉
+
+---
+
+## 🔑 Key Points
+
+* **Private IPs (192.168.x.x, 10.x.x.x, 172.16–31.x.x)** stay **inside your LAN**.
+* **Router does NAT** → swaps them with **public IP**.
+* **Only the router’s public IP is visible on the internet**.
+
+---
+
+👉 So dude, NAT is like the **secretary** of an office:
+
+* Employees (private IPs) call outside world through **one office phone (public IP)**.
+* When someone calls back, secretary checks the notes (NAT table) and passes it to the right employee. 📞
+
+---
+
+Good question dude 🤝 let’s clear that up:
+
+The **mobile tower itself (BTS/eNodeB/gNodeB)** does **not** convert private IP → public IP.
+
+👉 The tower’s job is mostly **radio stuff**:
+
+* Connects your phone via 4G/5G signals.
+* Passes your data to the **mobile core network**.
+
+The **actual conversion (private → public IP)** happens deeper inside the mobile operator’s **core network**, usually at a gateway:
+
+* In **4G**: PGW (Packet Data Network Gateway).
+* In **5G**: UPF (User Plane Function).
+* These devices run **Carrier-Grade NAT (CGNAT)**.
+
+So the flow looks like this:
+		[Phone: 10.x.x.x] → [Tower: forwards only] → [Core Gateway (PGW/UPF)] → 
+  		CGNAT → [Public IP: 49.x.x.x] → Internet
+---
+
+⚡ **In short**:
+
+* The **tower = radio bridge**.
+* The **core network gateway = does NAT, gives you the public IP**.
+---
+
+
+
+
+Perfect timing, dude 😎 Let’s jump into **DHCP** and **NAT**.
+
+---
+
+### 🔹 **DHCP (Dynamic Host Configuration Protocol)**
+
+* It’s like an **automatic IP address giver**.
+* Instead of you manually setting an IP, subnet mask, gateway, DNS, etc., DHCP does it for you.
+* Example: When your phone connects to Wi-Fi, the router’s DHCP server says:
+
+  * “Okay, here’s your IP: 192.168.1.5, subnet mask: 255.255.255.0, gateway: 192.168.1.1, DNS: 8.8.8.8.”
+
+📌 Without DHCP → you’d have to type all of this manually.
+
+---
+
+### 🔹 **NAT (Network Address Translation)**
+
+* NAT sits inside your **router (or mobile operator core)**.
+* It allows **multiple private IPs** (192.168.x.x, 10.x.x.x, etc.) to share **one public IP** on the internet.
+
+💡 Example:
+* Your laptop = 192.168.1.2
+* Your phone = 192.168.1.3
+* Your smart TV = 192.168.1.4
+➡️ NAT translates all of them to **one public IP** (e.g., 103.25.36.11) when they go out to the internet.
+This is why Google sees only **one public IP** for your whole home network.
+---
+
+⚡ **Key Relationship**:
+* **DHCP** gives private IPs to devices inside a network.
+* **NAT** lets those private IP devices reach the public internet by mapping them to a public IP.
+---

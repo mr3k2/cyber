@@ -1,0 +1,200 @@
+Shell Scripting used for automate tasking.
+
+-> need $ sign to access variable ex: $var_name
+constant variable:- readonly var_name=value
+
+Array: same as other programming languages but space seprated:- array_name=(1 2 3 4 "string value"). all value seprated by space. and can get via index: ${array_name[index]},
+	use * in the place of index for getting full array,
+	for length of the array: ${#array_name[*]}
+	to get subarray: ${array_name[*]:start_idx:length_of_subarray}
+
+Array Key-value pair (Dictonary): first need to declare :- declare -A array_name
+				to insert ine values: array_name=( [key]=value [key]=values )
+				get value : ${array_name[key]}
+
+String Operatons : str="This is just for operations"
+		length=${#str}
+		upper=${str^^}
+		lower=${str,,}
+		replace=${str/old_word/new_word}
+		slice=${str:start_index:substring_length}
+		
+
+User Intrection/Take Input :- There are 2 ways to take input:
+				:- read var_name -> take input and store in var
+				:- read -p "Display a message like enter your name" var_name -> show message during input.
+
+
+Mathmatical Expression:- let keyword before the var like:- a=10
+							   b=20
+							   let ans=$a*$b
+			another way is (()) double bracket ex: 
+							    ans=$((a*b))
+
+
+IF-ELSE :- 	if [[ condition ]]
+		then 
+			code
+		else
+			code
+		if -> to close if block
+	-----------------------------------
+IF-ELIF-ELSE:- 
+		if [[ condition ]]
+		then 
+			code
+		elif 
+		then 
+			code
+		else
+			code
+		fi
+	----------------------------------------
+Case:- 
+	read choice
+	
+	case $choice in
+		1)command;; 
+		2)command2;;
+		*)invalid;;
+	esac -> to close the case
+
+Logical Operator:- &&, ||, !
+
+
+
+						---Loops----
+FOR LOOP:->
+--------------------------------|
+for loop :- 		        |
+	for i in 1 2 3 4        |
+	do 			|
+		task		|
+	done			|
+--------------------------------|
+for i in this is sequences	|
+do 				|
+	task			|
+done				|
+--------------------------------|
+for i in {1..100}		|
+do				|
+	task			|
+done				|
+--------------------------------|
+file=/home/user/Desktop/file.txt|
+				|
+for name in $(cat $file)	|
+do 				|
+	echo "$name"		|
+	#and many operations	|
+done				|
+				|
+arr=(1 2 3 faizan)		|
+len=${#arr[*]}			|
+for((i=0; i<$len; i++))		|	
+do 				|
+	#task			|
+done				|	
+--------------------------------|
+
+WHILE LOOP :->
+--------------------------------|
+num=1 		       		|
+while [[ $num -le 10 ]]         |
+do	 			|
+	task			|
+	((num++))       	|
+done				|
+--------------------------------|
+Until Loop :->
+--------------------------------|
+Just opposite of while. 	|
+until [ condition ]		|
+	task			|
+done				|
+Runs until condition is false.  |
+--------------------------------|
+Read file using while loop.	|
+while read var_name		|
+do				|
+	echo "$var_name"	|
+done < file.txt			|
+--------------------------------|
+
+Read content from a csv file-> 
+				while IFS="," read id name age
+				do
+					echo $id
+					echo $name
+					echo $age
+				done < file.csv
+# var for columns like: id name phone and IFS for , seprated.
+
+Inhance file read:-> 
+		cat file.csv | awk 'NR!=1 {print} | while IFS="," read id name age
+		#this line will avoide first row data.
+		
+		
+<---------------Function--------------------->
+2 ways to create function:-
+				#first way
+				function fun_name {
+					code
+				}
+				
+				#second way
+				fun_name () {
+					code
+				}
+ex: 
+function greet {
+	echo "Good morning $1"
+}
+greet faizan
+
+#Homework calcular (use: case, function, input etc) Done
+
+
+<------Arguments------->
+Give arguments during script running and access inside the script.
+
+To get no. of arguments: $#
+To display all arguments: $@
+To use or display arguments: $1 $2 etc.
+
+shift -> for shifting the arguments..
+$? -> give us previous command, if it was successful it return 0 otherwise another num.
+
+$basename
+$dirname
+$realpath
+
+if [[ -d dirname ]] -> if directory exist
+if [[ ! -d dirname ]] -> if directory does't exist
+if [[ -f filename ]] -> if file exist
+if [[ ! -f filename ]] -> if file doest't exist
+
+
+$echo $RANDOM -> get random value between 0-32767
+$echo $UID -> get user id.
+
+<--------Redirection in Script--------->
+		> >>
+$ls > file.txt -> stores all files name in file.txt, it's override the data.
+$ls >> file.txt -> stores all files name in file.txt it's appends the data.
+
+__________________________________________
+$command &> /dev/null -> hide the process from terminal and don't store anywhere.
+$echo "name of the script ${0}" -> print the name of the script.
+
+$logger "This message will appear in /var/log/messages" -> this will appear in /var/log/messages.
+
+-------Debug----------
+set -x :- write this in the beginning of the script to show the dubuging process during run time.
+set -e :- write this in the beginning of the script but this is for exit the program whenever get any failed command.
+
+
+------Running script in backgound-------
+
+
